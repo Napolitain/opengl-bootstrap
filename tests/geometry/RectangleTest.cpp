@@ -2,7 +2,7 @@
 // Created by Maxime Boucher on 17/11/2022.
 //
 
-#include "catch2/catch_all.hpp"
+
 #include "../../include/geometry/Rectangle.hpp"
 
 TEST_CASE("testing the factorial function") {
