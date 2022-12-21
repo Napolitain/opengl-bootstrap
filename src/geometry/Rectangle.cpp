@@ -11,3 +11,7 @@ Rectangle::Rectangle(const glm::vec2 &a, const glm::vec2 &b, const glm::vec2 &c,
 float Rectangle::area() {
 	return Line(a, b).length() * Line(a, c).length();
 }
+
+float Rectangle::perimeter() {
+	return 2 * (Line(a, b).length() + Line(a, c).length());
+}

@@ -5,7 +5,7 @@
 
 #include "../../include/geometry/Rectangle.hpp"
 
-TEST_CASE("testing the factorial function") {
+TEST("testing rectangle.area") {
 	Rectangle rectangle(
 			glm::vec2(0, 0),
 			glm::vec2(0, 5),

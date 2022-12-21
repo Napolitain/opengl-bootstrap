@@ -18,28 +18,6 @@ if(UNIX AND NOT APPLE)
     set(LINUX TRUE)
 endif()
 
-if(NOT WIN32)
-    string(ASCII 27 Esc)
-    set(ColourReset "${Esc}[m")
-    set(ColourBold  "${Esc}[1m")
-    set(Red         "${Esc}[31m")
-    set(Green       "${Esc}[32m")
-    set(Yellow      "${Esc}[33m")
-    set(Blue        "${Esc}[34m")
-    set(Magenta     "${Esc}[35m")
-    set(Cyan        "${Esc}[36m")
-    set(White       "${Esc}[37m")
-    set(BoldRed     "${Esc}[1;31m")
-    set(BoldGreen   "${Esc}[1;32m")
-    set(BoldYellow  "${Esc}[1;33m")
-    set(BoldBlue    "${Esc}[1;34m")
-    set(BoldMagenta "${Esc}[1;35m")
-    set(BoldCyan    "${Esc}[1;36m")
-    set(BoldWhite   "${Esc}[1;37m")
-endif()
-
-message(STATUS "${Magenta} # - Starting Cmake Build - # ${ColourReset}")
-
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Optionally set things like CMAKE_CXX_STANDARD, CMAKE_POSITION_INDEPENDENT_CODE here
@@ -67,7 +45,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 # Find packages go here.
-message(STATUS "${Yellow} Installing Libraries ${ColourReset}")
 include(FetchContent)
 
 if(APPLE)
@@ -86,14 +63,26 @@ if(LINUX)
         add_subdirectory(${assimp_SOURCE_DIR} ${assimp_BINARY_DIR})
     endif()
 endif()
-message(STATUS "${Green} Assimp Should Be Downloaded ${ColourReset}")
 
 if (APPLE)
     execute_process(COMMAND brew install freeglut)
 elseif(LINUX)
     execute_process(COMMAND sudo apt-get install freeglut3-dev)
 endif()
-message(STATUS "${Green} FreeGlut Should Be Downloaded ${ColourReset}")
+
+FetchContent_Declare(
+        glad
+        GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+)
+
+FetchContent_GetProperties(glad)
+if(NOT glad_POPULATED)
+    FetchContent_Populate(glad)
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${glad_SOURCE_DIR} ${glad_BINARY_DIR})
+endif()
 
 FetchContent_Declare(
         glfw
@@ -108,7 +97,6 @@ if(NOT glfw_POPULATED)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
 endif()
-message(STATUS "${Green} GLFW Should Be Downloaded ${ColourReset}")
 
 FetchContent_Declare(
         glm
@@ -121,7 +109,6 @@ if(NOT glm_POPULATED)
     set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
     add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
 endif()
-message(STATUS "${Green} GLM Should Be Downloaded ${ColourReset}")
 
 # The compiled library code is here
 add_subdirectory(src)
